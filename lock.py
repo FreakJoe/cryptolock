@@ -72,7 +72,7 @@ if sys.argv[1] == 'add':
 	if sys.argv[3] != sys.argv[4]:
 		print('Make sure you confirm your key by typing it twice')
 
-	add_file(sys.argv[2], sys.argv[3])
+	else: add_file(sys.argv[2], sys.argv[3])
 
 if sys.argv[1] == 'read':
 	# python lock.py read file.txt THISISA16BYTEKEY
