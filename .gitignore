@@ -6,9 +6,7 @@ __pycache__/
 
 *.db
 
-FeeDistribution/info
-info/
-FeeDistribution/settings.py
+data/
 
 # C extensions
 *.so
