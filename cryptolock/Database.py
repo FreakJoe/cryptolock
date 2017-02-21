@@ -1,14 +1,22 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Column, Integer, String, LargeBinary
 
 from .Document import Document
+from ..config import DATA_PATH, DB_NAME
 
 class Database():
-	def __init__(self):
+	def __init__(self, db_name=DB_NAME):
 		"""Initialize the database file and create all tables"""
-		self.engine = create_engine('sqlite:///contents.db')
+
+		# Ensure the data directory exists
+		if not os.path.exists(DATA_PATH):
+			os.makedirs(DATA_PATH)
+
+		self.engine = create_engine('sqlite:///{}.db'.format(os.path.join(DATA_PATH, db_name)))
 
 		from .Document import base
 		base.metadata.create_all(self.engine)
@@ -69,4 +77,7 @@ class Database():
 			return False
 
 		document_in_db = session.query(Document).filter(Document.document_name == document_name).first()
+		if not document_in_db:
+			return False
+
 		return document_in_db.document_content
