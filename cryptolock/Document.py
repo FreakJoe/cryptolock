@@ -3,8 +3,8 @@ from sqlalchemy import Column, Integer, String, LargeBinary
 
 base = declarative_base()
 
-class File(base):
-	__tablename__ = 'files'
+class Document(base):
+	__tablename__ = 'documents'
 	id = Column(Integer, primary_key=True)
-	file_name = Column(String)
-	file_content = Column(LargeBinary)
+	document_name = Column(String)
+	document_content = Column(LargeBinary)
