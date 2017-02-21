@@ -1,3 +1,5 @@
 from .Database import Database
 
-db = Database()
+def main():
+	"""Entry point for the application"""
+	db = Database()
