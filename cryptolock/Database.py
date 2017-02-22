@@ -5,8 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Column, Integer, String, LargeBinary
 
-from .Document import Document
-from ..config import DATA_PATH, DB_NAME
+from cryptolock.Document import Document
+from config import DATA_PATH, DB_NAME
 
 class Database():
 	def __init__(self, db_name=DB_NAME):

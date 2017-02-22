@@ -1,4 +1,4 @@
-from .Database import Database
+from cryptolock.Database import Database
 
 def main():
 	"""Entry point for the application"""

@@ -7,7 +7,10 @@ from ..config import TEST_DB_NAME, DATA_PATH
 class TestDatabase(unittest.TestCase):
 	@classmethod
 	def setUpClass(self):
-		os.remove(os.path.join(DATA_PATH, '{}.db'.format(TEST_DB_NAME)))
+		# Create a fresh test database
+		if os.path.exists(os.path.join(DATA_PATH, '{}.db'.format(TEST_DB_NAME))):
+			os.remove(os.path.join(DATA_PATH, '{}.db'.format(TEST_DB_NAME)))
+
 		Database(TEST_DB_NAME)
 
 	@classmethod
