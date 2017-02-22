@@ -10,7 +10,7 @@ from config import DATA_PATH, DB_NAME
 
 class Database():
 	def __init__(self, db_name=DB_NAME):
-		"""Initialize the database file and create all tables"""
+		"""Initializes the database file and create all tables"""
 
 		# Ensure the data directory exists
 		if not os.path.exists(DATA_PATH):
@@ -51,9 +51,6 @@ class Database():
 		# If the document does already exist
 		else:
 			# Update instead of adding new entry
-			f = open('test.txt', 'a')
-			f.write('\n' + str(document))
-			f.write('\n' + str(self.update_document(document)))
 			return self.update_document(document)
 
 		return True
