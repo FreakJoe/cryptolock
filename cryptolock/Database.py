@@ -23,6 +23,11 @@ class Database():
 
 		self.session = sessionmaker(bind=self.engine)()
 
+	def close(self):
+		"""Closes the session"""
+
+		return self.session.close()
+
 	def add_document(self, document):
 		"""Stores a document of format (document_name, document_content) in the database. 
 		If the document is new,	a database entry is added, otherwise the existing entry is updated."""
@@ -46,6 +51,9 @@ class Database():
 		# If the document does already exist
 		else:
 			# Update instead of adding new entry
+			f = open('test.txt', 'a')
+			f.write('\n' + str(document))
+			f.write('\n' + str(self.update_document(document)))
 			return self.update_document(document)
 
 		return True
@@ -59,9 +67,9 @@ class Database():
 
 		document_name = document[0]
 		document_content = document[1]
-		document_in_db = session.query(Document).filter(Document.document_name == document_name).first()
+		document_in_db = self.session.query(Document).filter(Document.document_name == document_name).first()
 		if document_in_db:
-			document_in_db.file_content = document_content
+			document_in_db.document_content = document_content
 			self.session.commit()
 
 		else:
@@ -76,7 +84,7 @@ class Database():
 		if not isinstance(document_name, str):
 			return False
 
-		document_in_db = session.query(Document).filter(Document.document_name == document_name).first()
+		document_in_db = self.session.query(Document).filter(Document.document_name == document_name).first()
 		if not document_in_db:
 			return False
 
