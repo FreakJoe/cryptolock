@@ -1,8 +1,8 @@
 import unittest
 import os
 
-from ..cryptolock.Database import Database
-from ..config import TEST_DB_NAME, DATA_PATH
+from cryptolock.Database import Database
+from config import TEST_DB_NAME, DATA_PATH
 
 class TestDatabase(unittest.TestCase):
 	@classmethod
