@@ -28,6 +28,16 @@ class TestSecurity(unittest.TestCase):
 			test_key = random_string(16, 2)
 			self.assertEqual(decrypt(encrypt(test_string, test_key), test_key), test_string)
 
+	def test_encrypt(self):
+		self.assertFalse(encrypt('tooshort', 'somekey'))
+		self.assertFalse(encrypt('definitelynottooshortthough', 'tooooooooooooooooooooooooolong'))
+		self.assertFalse(encrypt('definitelynottooshortthough', ['not', 'really', 'a', 'key']))
+
+	def test_decrypt(self):
+		self.assertFalse(decrypt('tooshort', 'somekey'))
+		self.assertFalse(decrypt('definitelynottooshortthough', 'tooooooooooooooooooooooooolong'))
+		self.assertFalse(decrypt('definitelynottooshortthough', ['not', 'really', 'a', 'key']))
+
 	def test_ensure_key_validity(self):
 		self.assertEqual(ensure_key_validity('123456789'), '0000000123456789')
 
