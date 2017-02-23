@@ -1,3 +1,6 @@
+import hmac
+import hashlib
+
 from Crypto.Cipher import AES
 from Crypto import Random
 
@@ -12,8 +15,9 @@ def encrypt(message, key):
 		return False
 
 	iv = Random.new().read(AES.block_size)
+	hmac_digest = hmac.new(key, message, hashlib.sha256).hexdigest()
 	cipher = AES.new(key, AES.MODE_CFB, iv)
-	message_encrypted = iv + cipher.encrypt(message)
+	message_encrypted = iv + cipher.encrypt(message) + hmac_digest
 
 	return message_encrypted
 
@@ -29,10 +33,18 @@ def decrypt(message, key):
 
 	# Retrieve the iv stored in the first AES.block_size places of the string
 	iv = message[0:AES.block_size]
+	# Retrieve the hmac digest stored in the last sha256.digest_size * 2 characters of the string
+	real_hmac_digest = message[int(len(message) - hashlib.sha256().digest_size * 2):]
 	# and the actual message stored in the remaining part of the string
-	message = message[AES.block_size:]
+	message = message[AES.block_size:int(len(message) - hashlib.sha256().digest_size * 2)]
+
 	cipher = AES.new(key, AES.MODE_CFB, iv)
 	message_decrypted = cipher.decrypt(message)
+
+	# Ensure the correct key is used to decrypt
+	hmac_digest = hmac.new(key, message_decrypted, hashlib.sha256).hexdigest()
+	if not hmac.compare_digest(real_hmac_digest, hmac_digest):
+		return False
 
 	return message_decrypted
 
@@ -41,7 +53,7 @@ def ensure_key_validity(key):
 	if not isinstance(key, str):
 		return False
 
-	# Ensure byte-length is multiple of 16
+	# Ensure key length is multiple of 16
 	if len(key) < 16:
 		key = key.zfill(16)
 

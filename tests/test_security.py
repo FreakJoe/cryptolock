@@ -26,7 +26,10 @@ class TestSecurity(unittest.TestCase):
 		for i in range(10):
 			test_string = random_string(100)
 			test_key = random_string(16, 2)
+			false_test_key = random_string(16, 2)
 			self.assertEqual(decrypt(encrypt(test_string, test_key), test_key), test_string)
+			# Ensure hmac verification
+			self.assertFalse(decrypt(encrypt(test_string, test_key), false_test_key))
 
 	def test_encrypt(self):
 		self.assertFalse(encrypt('tooshort', 'somekey'))
