@@ -32,7 +32,6 @@ class TestSecurity(unittest.TestCase):
 			self.assertFalse(decrypt(encrypt(test_string, test_key), false_test_key))
 
 	def test_encrypt(self):
-		self.assertFalse(encrypt('tooshort', 'somekey'))
 		self.assertFalse(encrypt('definitelynottooshortthough', 'tooooooooooooooooooooooooolong'))
 		self.assertFalse(encrypt('definitelynottooshortthough', ['not', 'really', 'a', 'key']))
 
