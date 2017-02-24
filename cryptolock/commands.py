@@ -1,11 +1,49 @@
 """Provides the functionality for various commands chosen in the CLI"""
 
-def add(file=None):
-    """Locks a file into the database"""
+import os
 
-    pass
+from binaryornot.check import is_binary
 
-def read(file=None):
-    """Reads a file from the database"""
+from cryptolock.exceptions import InvalidFileException, BinaryFileException
+from cryptolock.security import ensure_key_validity
 
-    pass
+def add(sdb, document=None, key=None):
+    """Locks a document into the database"""
+
+    if not document:
+        # Input document
+        pass
+
+    if not isinstance(document, str):
+        raise InvalidFileException
+
+    if not os.path.exists(document):
+        raise InvalidFileException
+
+    if is_binary(document):
+        raise BinaryFileException
+
+    document_name = os.path.basename(document)
+    document_content = None
+    with open(document, 'r') as f:
+        document_content = f.read()
+
+    if not document_content:
+        raise InvalidFileException
+
+    if not key:
+        # Input key
+        pass
+
+    key = ensure_key_validity(key)
+    return sdb.add_document((document_name, document_content), key)
+
+def read(sdb, document=None, key=None):
+    """Reads a document from the database"""
+
+    if not document:
+        # Input document and key
+        pass
+
+    else:
+        pass

@@ -32,3 +32,8 @@ class BinaryFileException(Exception):
     """Exception raised when a false key is supplied for decryption"""
 
     pass
+
+class InvalidFileException(Exception):
+    """Exception raised when an invalid file is supplied for adding or reading"""
+
+    pass
