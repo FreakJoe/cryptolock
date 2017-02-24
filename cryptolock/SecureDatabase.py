@@ -26,8 +26,6 @@ class SecureDatabase(object):
 
         # Ensure key validity
         key = ensure_key_validity(key)
-        if not key:
-            return False
 
         document_name = document[0]
         document_content = document[1]
@@ -44,8 +42,6 @@ class SecureDatabase(object):
 
         # Ensure key validity
         key = ensure_key_validity(key)
-        if not key:
-            return False
 
         document_name = document[0]
         document_content = document[1]
@@ -59,8 +55,6 @@ class SecureDatabase(object):
 
         # Ensure key validity
         key = ensure_key_validity(key)
-        if not key:
-            return False
 
         document_content = self.database.get_document_content(document_name)
         if not document_content:

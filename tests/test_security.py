@@ -41,7 +41,7 @@ class TestSecurity(unittest.TestCase):
             self.assertEqual(decrypt(encrypt(test_string, test_key), test_key), test_string)
             # Ensure hmac verification
             with self.assertRaises(CryptoFalseKeyException):
-                self.assertFalse(decrypt(encrypt(test_string, test_key), false_test_key))
+                decrypt(encrypt(test_string, test_key), false_test_key)
 
     def test_encrypt(self):
         """Test the encrypt method"""
@@ -49,10 +49,10 @@ class TestSecurity(unittest.TestCase):
         test_string = random_string(100)
 
         with self.assertRaises(CryptoInvalidKeyException):
-            self.assertFalse(encrypt(test_string, 'tooooooooooooooooooooooooolong'))
+            encrypt(test_string, 'tooooooooooooooooooooooooolong')
 
         with self.assertRaises(CryptoInvalidKeyException):
-            self.assertFalse(encrypt(test_string, ['not', 'really', 'a', 'key']))
+            encrypt(test_string, ['not', 'really', 'a', 'key'])
 
     def test_decrypt(self):
         """Test the decrypt method"""
@@ -60,19 +60,23 @@ class TestSecurity(unittest.TestCase):
         test_string = random_string(100)
 
         with self.assertRaises(CryptoInvalidMessageException):
-            self.assertFalse(decrypt('tooshort', 'somekey'))
+            decrypt('tooshort', 'somekey')
 
         with self.assertRaises(CryptoInvalidKeyException):
-            self.assertFalse(decrypt(test_string, 'tooooooooooooooooooooooooolong'))
+            decrypt(test_string, 'tooooooooooooooooooooooooolong')
 
         with self.assertRaises(CryptoInvalidKeyException):
-            self.assertFalse(decrypt(test_string, ['not', 'really', 'a', 'key']))
+            decrypt(test_string, ['not', 'really', 'a', 'key'])
 
     def test_ensure_key_validity(self):
         """Test the ensure_key_validity method"""
 
         self.assertEqual(ensure_key_validity('123456789'), '0000000123456789')
+        with self.assertRaises(CryptoInvalidKeyException):
+            ensure_key_validity('123456789123456789')
 
-        self.assertFalse(ensure_key_validity('123456789123456789'))
-        self.assertFalse(ensure_key_validity(12345678))
-        self.assertFalse(ensure_key_validity(['12345678']))
+        with self.assertRaises(CryptoInvalidKeyException):
+            ensure_key_validity(12345678)
+
+        with self.assertRaises(CryptoInvalidKeyException):
+            ensure_key_validity(['12345678'])

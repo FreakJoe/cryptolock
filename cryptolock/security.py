@@ -11,12 +11,8 @@ from cryptolock.exceptions import CryptoInvalidKeyException, CryptoInvalidMessag
 def encrypt(message, key):
     """AES-encrypts a message using the provided key"""
 
-    if not ensure_message_validity(message, False):
-        raise CryptoInvalidMessageException
-
+    ensure_message_validity(message, False)
     key = ensure_key_validity(key)
-    if not key:
-        raise CryptoInvalidKeyException
 
     init_vector = Random.new().read(AES.block_size)
     hmac_digest = hmac.new(key, message, sha256).hexdigest()
@@ -28,12 +24,8 @@ def encrypt(message, key):
 def decrypt(message, key):
     """Decrypts an AES-encrypted message using the provided key"""
 
-    if not ensure_message_validity(message):
-        raise CryptoInvalidMessageException
-
+    ensure_message_validity(message)
     key = ensure_key_validity(key)
-    if not key:
-        raise CryptoInvalidKeyException
 
     # Retrieve the initialization vector stored in the first AES.block_size places of the string
     init_vector = message[0:AES.block_size]
@@ -57,14 +49,14 @@ def ensure_key_validity(key):
 
     # Ensure the key is a string
     if not isinstance(key, str):
-        return False
+        raise CryptoInvalidKeyException
 
     # Ensure key length is multiple of 16
     if len(key) < 16:
         key = key.zfill(16)
 
     elif len(key) > 16 or len(key) == 0:
-        return False
+        raise CryptoInvalidKeyException
 
     return key
 
@@ -73,11 +65,11 @@ def ensure_message_validity(message, ensure_proper_length=True):
 
     # Ensure the message is a string
     if not isinstance(message, str):
-        return False
+        raise CryptoInvalidMessageException
 
     # Ensure the message is longer than AES.block_size as it has to contain an initialization vector of that length
     # and sha256.digest_size * 2 as it has to contain a hmac of that size
     if not len(message) > AES.block_size + sha256().digest_size * 2 and ensure_proper_length:
-        return False
+        raise CryptoInvalidMessageException
 
     return True
