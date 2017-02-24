@@ -50,5 +50,5 @@ class TestCommands(unittest.TestCase):
             if test_file[1]:
                 add(self.sdb, test_file[0], key)
 
-                with open(test_file[0], 'r') as f:
-                    self.assertEqual(read(self.sdb, test_file[1], key), f.read())
+                with open(test_file[0], 'r') as document_file:
+                    self.assertEqual(read(self.sdb, test_file[1], key), document_file.read())

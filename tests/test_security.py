@@ -31,7 +31,7 @@ class TestSecurity(unittest.TestCase):
         test_string = random_string(100)
 
         with self.assertRaises(CryptoInvalidKeyException):
-            encrypt(test_string, 'tooooooooooooooooooooooooolong')
+            encrypt(test_string, 'toooooooooooooooooooooooooooooooooooooooooooooooooooooooolong')
 
         with self.assertRaises(CryptoInvalidKeyException):
             encrypt(test_string, ['not', 'really', 'a', 'key'])
@@ -45,7 +45,7 @@ class TestSecurity(unittest.TestCase):
             decrypt('tooshort', 'somekey')
 
         with self.assertRaises(CryptoInvalidKeyException):
-            decrypt(test_string, 'tooooooooooooooooooooooooolong')
+            decrypt(test_string, 'toooooooooooooooooooooooooooooooooooooooooooooooooooooooolong')
 
         with self.assertRaises(CryptoInvalidKeyException):
             decrypt(test_string, ['not', 'really', 'a', 'key'])
@@ -53,9 +53,9 @@ class TestSecurity(unittest.TestCase):
     def test_ensure_key_validity(self):
         """Tests the ensure_key_validity method"""
 
-        self.assertEqual(ensure_key_validity('123456789'), '0000000123456789')
+        self.assertEqual(ensure_key_validity('123456789'), '00000000000000000000000123456789')
         with self.assertRaises(CryptoInvalidKeyException):
-            ensure_key_validity('123456789123456789')
+            ensure_key_validity('123456789123456789123456789123456789')
 
         with self.assertRaises(CryptoInvalidKeyException):
             ensure_key_validity(12345678)

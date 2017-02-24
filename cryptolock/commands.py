@@ -25,8 +25,8 @@ def add(sdb, document=None, key=None):
 
     document_name = os.path.basename(document)
     document_content = None
-    with open(document, 'r') as f:
-        document_content = f.read()
+    with open(document, 'r') as document_file:
+        document_content = document_file.read()
 
     if not document_content:
         raise InvalidFileException

@@ -52,10 +52,10 @@ def ensure_key_validity(key):
         raise CryptoInvalidKeyException
 
     # Ensure key length is multiple of 16
-    if len(key) < 16:
-        key = key.zfill(16)
+    if len(key) < 32:
+        key = key.zfill(32)
 
-    elif len(key) > 16 or len(key) == 0:
+    elif len(key) > 32 or len(key) == 0:
         raise CryptoInvalidKeyException
 
     return key
