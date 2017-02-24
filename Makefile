@@ -9,3 +9,6 @@ test:
 	
 lint:
 	pylint cryptolock --max-line-length=240
+	
+lint_tests:
+	pylint tests --max-line-length=240

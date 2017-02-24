@@ -1,15 +1,15 @@
-"""Test the SecureDatabase module"""
+"""Tests the SecureDatabase module"""
 
 import unittest
 import os
 
 from cryptolock.SecureDatabase import SecureDatabase
-from cryptolock.security import encrypt, decrypt
-from cryptolock.exceptions import CryptoInvalidKeyException, CryptoInvalidMessageException, CryptoFalseKeyException
+from cryptolock.exceptions import CryptoInvalidKeyException
+from cryptolock.utility import random_string
 from config import TEST_DB_NAME, DATA_PATH
 
 class TestSecureDatabase(unittest.TestCase):
-    """Test the SecureDatabase module"""
+    """Tests the SecureDatabase module"""
 
     @classmethod
     def setUpClass(cls):
@@ -28,17 +28,17 @@ class TestSecureDatabase(unittest.TestCase):
         os.remove(os.path.join(DATA_PATH, '{}.db'.format(TEST_DB_NAME)))
 
     def test_init(self):
-        """Test the SecureDatabase initialization"""
+        """Tests the SecureDatabase initialization"""
 
         self.assertTrue(os.path.exists(os.path.join(DATA_PATH, '{}.db'.format(TEST_DB_NAME))))
 
     def test_add_document(self):
-        """Test the add_document method"""
+        """Tests the add_document method"""
 
         name = 'test_document_1'
-        message = 'Test message 12345!'
-        key = 'test_key_12345'
-        
+        message = random_string(100)
+        key = random_string(16, 2)
+
         self.assertTrue(self.sdb.add_document((name, message), key))
         self.assertEqual(self.sdb.get_document_content(name, key), message)
 
@@ -51,23 +51,23 @@ class TestSecureDatabase(unittest.TestCase):
             self.assertFalse(self.sdb.add_document((name, message), ['th', 'br']))
 
     def test_update_document(self):
-        """Test the update_document method"""
+        """Tests the update_document method"""
 
         name = 'test_document_2'
-        message = 'Test message 54321!'
-        new_message = 'Test message 135813!'
-        key = 'test_key_54321'
+        message = random_string(100)
+        new_message = random_string(100)
+        key = random_string(16, 2)
 
         self.sdb.add_document((name, message), key)
         self.assertTrue(self.sdb.update_document((name, new_message), key))
         self.assertEqual(self.sdb.get_document_content(name, key), new_message)
 
     def test_get_document_content(self):
-        """Test the get_document_content method"""
+        """Tests the get_document_content method"""
 
         name = 'test_document_3'
-        message = 'Test message 12345!'
-        key = 'test_key_54321'
+        message = random_string(100)
+        key = random_string(16, 2)
 
         self.sdb.add_document((name, message), key)
         self.assertEqual(self.sdb.get_document_content(name, key), message)
