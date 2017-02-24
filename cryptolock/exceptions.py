@@ -37,3 +37,8 @@ class InvalidFileException(Exception):
     """Exception raised when an invalid file is supplied for adding or reading"""
 
     pass
+
+class DocumentNotFoundException(Exception):
+    """Exception raised when an a document that is supposed to be read doesn't exist"""
+
+    pass

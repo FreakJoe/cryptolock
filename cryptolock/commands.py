@@ -38,12 +38,19 @@ def add(sdb, document=None, key=None):
     key = ensure_key_validity(key)
     return sdb.add_document((document_name, document_content), key)
 
-def read(sdb, document=None, key=None):
+def read(sdb, document_name=None, key=None):
     """Reads a document from the database"""
 
-    if not document:
-        # Input document and key
+    if not document_name:
+        # Input document
         pass
 
-    else:
+    if not isinstance(document_name, str):
+        raise TypeError
+
+    if not key:
+        # Input key
         pass
+
+    key = ensure_key_validity(key)
+    return sdb.get_document_content(document_name, key)

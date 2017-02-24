@@ -2,6 +2,7 @@
 
 from cryptolock.Database import Database
 from cryptolock.security import encrypt, decrypt, ensure_key_validity
+from cryptolock.exceptions import DocumentNotFoundException
 from config import DB_NAME
 
 class SecureDatabase(object):
@@ -58,6 +59,6 @@ class SecureDatabase(object):
 
         document_content = self.database.get_document_content(document_name)
         if not document_content:
-            return False
+            raise DocumentNotFoundException
 
         return decrypt(document_content, key)

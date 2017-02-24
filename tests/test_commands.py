@@ -6,7 +6,8 @@ import os
 from cryptolock.SecureDatabase import SecureDatabase
 from cryptolock.commands import add, read
 from cryptolock.utility import random_string
-from cryptolock.exceptions import BinaryFileException, InvalidFileException
+from cryptolock.exceptions import BinaryFileException, InvalidFileException, DocumentNotFoundException
+from config import DATA_PATH, TEST_DB_NAME
 from tests import data
 
 class TestCommands(unittest.TestCase):
@@ -23,6 +24,13 @@ class TestCommands(unittest.TestCase):
             test_file = os.path.join(cls.test_file_location, 'test.{}'.format(test_file_extension[0]))
             cls.test_files.append((test_file, test_file_extension[1]))
         cls.sdb = SecureDatabase('test')
+
+    @classmethod
+    def tearDownClass(cls):
+        """"Closes the database connection and deletes the test database file"""
+
+        cls.sdb.close()
+        os.remove(os.path.join(DATA_PATH, '{}.db'.format(TEST_DB_NAME)))
 
     def test_add(self):
         """Test the add function"""
@@ -51,4 +59,7 @@ class TestCommands(unittest.TestCase):
                 add(self.sdb, test_file[0], key)
 
                 with open(test_file[0], 'r') as document_file:
-                    self.assertEqual(read(self.sdb, test_file[1], key), document_file.read())
+                    self.assertEqual(read(self.sdb, os.path.basename(test_file[0]), key), document_file.read())
+
+        with self.assertRaises(DocumentNotFoundException):
+            read(self.sdb, 'file_that_doesn\'t_exist', key)
