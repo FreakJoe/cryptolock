@@ -13,6 +13,7 @@ def encrypt(message, key):
 
     ensure_message_validity(message, False)
     key = ensure_key_validity(key)
+    key = hash_key(key)
 
     init_vector = Random.new().read(AES.block_size)
     hmac_digest = hmac.new(key, message, sha256).hexdigest()
@@ -26,6 +27,7 @@ def decrypt(message, key):
 
     ensure_message_validity(message)
     key = ensure_key_validity(key)
+    key = hash_key(key)
 
     # Retrieve the initialization vector stored in the first AES.block_size places of the string
     init_vector = message[0:AES.block_size]
@@ -73,3 +75,11 @@ def ensure_message_validity(message, ensure_proper_length=True):
         raise CryptoInvalidMessageException
 
     return True
+
+def hash_key(key):
+    """Hash the key a total of 1000 times to counteract brute force attacks"""
+
+    for _ in range(0, 1000):
+        key = sha256(key).digest()
+
+    return key
