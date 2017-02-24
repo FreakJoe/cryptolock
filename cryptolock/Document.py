@@ -1,10 +1,14 @@
+"""Provides the Document model"""
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, LargeBinary
 
-base = declarative_base()
+BASE = declarative_base()
 
-class Document(base):
+class Document(BASE): # pylint: disable=too-few-public-methods
+    """Document model"""
+
     __tablename__ = 'documents'
-    id = Column(Integer, primary_key=True)
+    doc_id = Column(Integer, primary_key=True)
     document_name = Column(String)
     document_content = Column(LargeBinary)

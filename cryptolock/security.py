@@ -1,3 +1,5 @@
+"""Provides security-related functionality"""
+
 import hmac
 from hashlib import sha256
 
@@ -14,10 +16,10 @@ def encrypt(message, key):
     if not key:
         return False
 
-    iv = Random.new().read(AES.block_size)
+    init_vector = Random.new().read(AES.block_size)
     hmac_digest = hmac.new(key, message, sha256).hexdigest()
-    cipher = AES.new(key, AES.MODE_CFB, iv)
-    message_encrypted = iv + cipher.encrypt(message) + hmac_digest
+    cipher = AES.new(key, AES.MODE_CFB, init_vector)
+    message_encrypted = init_vector + cipher.encrypt(message) + hmac_digest
 
     return message_encrypted
 
@@ -31,14 +33,14 @@ def decrypt(message, key):
     if not key:
         return False
 
-    # Retrieve the iv stored in the first AES.block_size places of the string
-    iv = message[0:AES.block_size]
+    # Retrieve the initialization vector stored in the first AES.block_size places of the string
+    init_vector = message[0:AES.block_size]
     # Retrieve the hmac digest stored in the last sha256.digest_size * 2 characters of the string
     real_hmac_digest = message[int(len(message) - sha256().digest_size * 2):]
     # and the actual message stored in the remaining part of the string
     message = message[AES.block_size:int(len(message) - sha256().digest_size * 2)]
 
-    cipher = AES.new(key, AES.MODE_CFB, iv)
+    cipher = AES.new(key, AES.MODE_CFB, init_vector)
     message_decrypted = cipher.decrypt(message)
 
     # Ensure the correct key is used to decrypt
@@ -49,6 +51,8 @@ def decrypt(message, key):
     return message_decrypted
 
 def ensure_key_validity(key):
+    """Ensure a key is valid to be used in encryption or decryption"""
+
     # Ensure the key is a string
     if not isinstance(key, str):
         return False
@@ -57,17 +61,19 @@ def ensure_key_validity(key):
     if len(key) < 16:
         key = key.zfill(16)
 
-    elif len(key) > 16:
+    elif len(key) > 16 or len(key) == 0:
         return False
 
     return key
 
 def ensure_message_validity(message, ensure_proper_length=True):
+    """Ensure a message is valid to be decrypted"""
+
     # Ensure the message is a string
     if not isinstance(message, str):
         return False
 
-    # Ensure the message is longer than AES.block_size as it has to contain an iv of that length
+    # Ensure the message is longer than AES.block_size as it has to contain an initialization vector of that length
     # and sha256.digest_size * 2 as it has to contain a hmac of that size
     if not len(message) > AES.block_size + sha256().digest_size * 2 and ensure_proper_length:
         return False

@@ -1,14 +1,16 @@
+"""Provides an interface for interaction with the sqlite database"""
+
 import os
 
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String, LargeBinary
 
 from cryptolock.Document import Document
 from config import DATA_PATH, DB_NAME
 
-class Database():
+class Database(object):
+    """Interface for interaction with the sqlite database"""
+
     def __init__(self, db_name=DB_NAME):
         """Initializes the database file and create all tables"""
 
@@ -18,8 +20,8 @@ class Database():
 
         self.engine = create_engine('sqlite:///{}.db'.format(os.path.join(DATA_PATH, db_name)))
 
-        from .Document import base
-        base.metadata.create_all(self.engine)
+        from .Document import BASE
+        BASE.metadata.create_all(self.engine)
 
         self.session = sessionmaker(bind=self.engine)()
 
@@ -30,7 +32,7 @@ class Database():
 
     def add_document(self, document):
         """Stores a document of format (document_name, document_content) in the database.
-        If the document is new,    a database entry is added, otherwise the existing entry is updated."""
+        If the document is new, a database entry is added, otherwise the existing entry is updated."""
 
         # Ensure the document is supplied as a list or tuple of two strings: document name and document content
         if (not isinstance(document, tuple) and not isinstance(document, list)) or not len(document) == 2 or not isinstance(document[0], str) or not isinstance(document[1], str):
