@@ -27,3 +27,8 @@ class CryptoFalseKeyException(Exception):
     """Exception raised when a false key is supplied for decryption"""
 
     pass
+
+class BinaryFileException(Exception):
+    """Exception raised when a false key is supplied for decryption"""
+
+    pass

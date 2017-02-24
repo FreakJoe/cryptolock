@@ -1,7 +1,5 @@
 """Provides an entry point for the application"""
 
-from collections import OrderedDict
-
 from cryptolock.Database import Database
 from cryptolock.commands import add, read
 
@@ -16,7 +14,7 @@ def main():
 
     print('Welcome to CryptoLock.')
     print('For instructions please check out https://github.com/FreakJoe/cryptolockpy.\n\n')
-    for command in sorted(commands.items(), key= lambda t: t[0]):
+    for command in sorted(commands.items(), key=lambda t: t[0]):
         output = '{} - {}'.format(command[0], command[1][0])
         print(output)
 
@@ -26,5 +24,5 @@ def main():
     try:
         commands[int(command)][1]()
 
-    except:
+    except (KeyError, ValueError):
         print('Your choice was invalid.')
