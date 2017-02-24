@@ -6,15 +6,17 @@ from hashlib import sha256
 from Crypto.Cipher import AES
 from Crypto import Random
 
+from cryptolock.exceptions import CryptoInvalidKeyException, CryptoInvalidMessageException, CryptoFalseKeyException
+
 def encrypt(message, key):
     """AES-encrypts a message using the provided key"""
 
     if not ensure_message_validity(message, False):
-        return False
+        raise CryptoInvalidMessageException
 
     key = ensure_key_validity(key)
     if not key:
-        return False
+        raise CryptoInvalidKeyException
 
     init_vector = Random.new().read(AES.block_size)
     hmac_digest = hmac.new(key, message, sha256).hexdigest()
@@ -27,11 +29,11 @@ def decrypt(message, key):
     """Decrypts an AES-encrypted message using the provided key"""
 
     if not ensure_message_validity(message):
-        return False
+        raise CryptoInvalidMessageException
 
     key = ensure_key_validity(key)
     if not key:
-        return False
+        raise CryptoInvalidKeyException
 
     # Retrieve the initialization vector stored in the first AES.block_size places of the string
     init_vector = message[0:AES.block_size]
@@ -46,7 +48,7 @@ def decrypt(message, key):
     # Ensure the correct key is used to decrypt
     hmac_digest = hmac.new(key, message_decrypted, sha256).hexdigest()
     if not hmac.compare_digest(real_hmac_digest, hmac_digest):
-        return False
+        raise CryptoFalseKeyException
 
     return message_decrypted
 
