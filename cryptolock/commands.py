@@ -75,4 +75,4 @@ def read(sdb, document_name=None, key=None):
     time.sleep(.1)
     os.remove(temp_document_name)
 
-    return True
+    return (True, document_content)
