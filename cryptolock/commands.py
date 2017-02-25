@@ -1,6 +1,8 @@
 """Provides the functionality for various commands chosen in the CLI"""
 
 import os
+import tempfile
+import time
 
 from binaryornot.check import is_binary
 
@@ -34,7 +36,15 @@ def add(sdb, document=None, key=None):
         key = raw_input('\nPlease enter the password you would like to use to protect the file:\n')
 
     key = ensure_key_validity(key)
-    return sdb.add_document((document_name, document_content), key)
+    success = sdb.add_document((document_name, document_content), key)
+
+    if success:
+        print('The document was successfully added to the database.')
+
+    else:
+        print('An unspecified error has occured. Please contact the developer on github.')
+
+    return success
 
 def read(sdb, document_name=None, key=None):
     """Reads a document from the database"""
@@ -49,4 +59,19 @@ def read(sdb, document_name=None, key=None):
         key = raw_input('\nPlease enter the password you specified to protect the file:\n')
 
     key = ensure_key_validity(key)
-    return sdb.get_document_content(document_name, key)
+    document_content = sdb.get_document_content(document_name, key)
+    if not document_content:
+        print('An unspecified error has occured. Please contact the developer on github.')
+        return False
+
+    temp_document_name = None
+    with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp_document:
+        temp_document.write(document_content)
+        os.startfile(temp_document.name, 'open')
+        temp_document_name = temp_document.name
+    
+    # Wait for the temp file to be opened before removing it
+    time.sleep(.1)
+    os.remove(temp_document_name)
+
+    return True
