@@ -66,13 +66,13 @@ def read(sdb, document_name=None, key=None, test=False):
         return False
 
     temp_document_name = None
-    with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp_document:
+    with tempfile.NamedTemporaryFile(mode='a+', suffix='.txt', delete=False) as temp_document:
         temp_document.write(document_content)
         if not test:
             webbrowser.open(temp_document.name)
 
         temp_document_name = temp_document.name
-    
+
     # Wait for the temp file to be opened before removing it
     time.sleep(1)
     os.remove(temp_document_name)
