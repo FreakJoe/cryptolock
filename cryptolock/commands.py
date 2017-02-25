@@ -11,10 +11,9 @@ def add(sdb, document=None, key=None):
     """Locks a document into the database"""
 
     if not document:
-        # Input document
-        pass
+        document = raw_input('\nPlease enter the relative or absolute path to the text file you\'d like to save:\n')
 
-    if not isinstance(document, str):
+    if not isinstance(document, str) or document == '':
         raise InvalidFileException
 
     if not os.path.exists(document):
@@ -32,8 +31,7 @@ def add(sdb, document=None, key=None):
         raise InvalidFileException
 
     if not key:
-        # Input key
-        pass
+        key = raw_input('\nPlease enter the password you would like to use to protect the file:\n')
 
     key = ensure_key_validity(key)
     return sdb.add_document((document_name, document_content), key)
@@ -42,15 +40,13 @@ def read(sdb, document_name=None, key=None):
     """Reads a document from the database"""
 
     if not document_name:
-        # Input document
-        pass
+        document_name = raw_input('\nPlease enter the name of the text file you\'d like to view:\n')
 
-    if not isinstance(document_name, str):
-        raise TypeError
+    if not isinstance(document_name, str) or document_name == '':
+        raise InvalidFileException
 
     if not key:
-        # Input key
-        pass
+        key = raw_input('\nPlease enter the password you specified to protect the file:\n')
 
     key = ensure_key_validity(key)
     return sdb.get_document_content(document_name, key)
