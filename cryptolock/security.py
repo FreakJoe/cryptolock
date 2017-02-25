@@ -77,9 +77,9 @@ def ensure_message_validity(message, ensure_proper_length=True):
     return True
 
 def hash_key(key):
-    """Hash the key a total of 1000 times to counteract brute force attacks"""
+    """Hash the key a total of 200 000 times to counteract brute force attacks"""
 
-    for _ in range(0, 1000):
+    for _ in range(0, 200000):
         key = sha256(key).digest()
 
     return key

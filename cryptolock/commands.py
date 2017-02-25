@@ -47,7 +47,7 @@ def add(sdb, document=None, key=None):
 
     return success
 
-def read(sdb, document_name=None, key=None):
+def read(sdb, document_name=None, key=None, test=False):
     """Reads a document from the database"""
 
     if not document_name:
@@ -68,11 +68,13 @@ def read(sdb, document_name=None, key=None):
     temp_document_name = None
     with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp_document:
         temp_document.write(document_content)
-        webbrowser.open(temp_document.name)
+        if not test:
+            webbrowser.open(temp_document.name)
+
         temp_document_name = temp_document.name
     
     # Wait for the temp file to be opened before removing it
-    time.sleep(.1)
+    time.sleep(1)
     os.remove(temp_document_name)
 
     return (True, document_content)

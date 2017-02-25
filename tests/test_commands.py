@@ -59,7 +59,7 @@ class TestCommands(unittest.TestCase):
                 add(self.sdb, test_file[0], key)
 
                 with open(test_file[0], 'r') as document_file:
-                    self.assertEqual(read(self.sdb, os.path.basename(test_file[0]), key)[1], document_file.read())
+                    self.assertEqual(read(self.sdb, os.path.basename(test_file[0]), key, True)[1], document_file.read())
 
         with self.assertRaises(DocumentNotFoundException):
-            read(self.sdb, 'file_that_doesn\'t_exist', key)
+            read(self.sdb, 'file_that_doesn\'t_exist', key, True)
