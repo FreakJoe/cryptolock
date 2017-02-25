@@ -1,5 +1,6 @@
 """Provides the functionality for various commands chosen in the CLI"""
 
+import webbrowser
 import os
 import tempfile
 import time
@@ -67,7 +68,7 @@ def read(sdb, document_name=None, key=None):
     temp_document_name = None
     with tempfile.NamedTemporaryFile(suffix='.txt', delete=False) as temp_document:
         temp_document.write(document_content)
-        os.startfile(temp_document.name, 'open')
+        webbrowser.open(temp_document.name)
         temp_document_name = temp_document.name
     
     # Wait for the temp file to be opened before removing it
